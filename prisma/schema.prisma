@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  REFUNDED
+}
+
+enum ShippingStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+model User {
+  id          String    @id @default(uuid())
+  clerk_id    String    @unique
+  full_name   String
+  email       String    @unique
+  phone       String?
+  whatsapp    String?
+  gender      Gender?
+  birth_place String?
+  birth_date  DateTime?
+  address     String?   @db.Text
+  role        Role      @default(USER)
+  
+  orders      Order[]
+  reviews     Review[]
+  wishlists   Wishlist[]
+  
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  products    Product[]
+  
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String    @db.Text
+  category_id String
+  brand       String?
+  stock       Int       @default(0)
+  price       Decimal   @db.Decimal(10, 2)
+  discount    Int       @default(0) // Percentage
+  image       String?
+  status      ProductStatus @default(DRAFT)
+  
+  category    Category  @relation(fields: [category_id], references: [id])
+  variants    ProductVariant[]
+  order_items OrderItem[]
+  reviews     Review[]
+  wishlisted  Wishlist[]
+  
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model ProductVariant {
+  id          String    @id @default(uuid())
+  product_id  String
+  processor   String?
+  vga         String?
+  ram         String?
+  storage     String?
+  color       String?
+  
+  product     Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id             String         @id @default(uuid())
+  user_id        String
+  total_price    Decimal        @db.Decimal(10, 2)
+  shipping_cost  Decimal        @db.Decimal(10, 2)
+  payment_status PaymentStatus  @default(PENDING)
+  shipping_status ShippingStatus @default(PENDING)
+  
+  user           User           @relation(fields: [user_id], references: [id])
+  items          OrderItem[]
+  
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  order_id    String
+  product_id  String
+  quantity    Int
+  subtotal    Decimal  @db.Decimal(10, 2)
+  
+  order       Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [product_id], references: [id])
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  user_id     String
+  product_id  String
+  rating      Int      @default(5)
+  comment     String?  @db.Text
+  approved    Boolean  @default(false)
+  
+  user        User     @relation(fields: [user_id], references: [id])
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  
+  created_at  DateTime @default(now())
+}
+
+model Wishlist {
+  id          String   @id @default(uuid())
+  user_id     String
+  product_id  String
+  
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  
+  created_at  DateTime @default(now())
+  
+  @@unique([user_id, product_id])
+}
+
+model Banner {
+  id          String   @id @default(uuid())
+  title       String
+  image       String
+  link        String?
+  
+  created_at  DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
