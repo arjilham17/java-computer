@@ -5,6 +5,7 @@ import { useCartStore } from "@/store/cart";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Navbar() {
   const { totalItems } = useCartStore();
@@ -42,6 +43,7 @@ export default function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Link href="/cart" className="relative p-2 hover:text-secondary transition-colors">
             <ShoppingCart className="w-5 h-5" />
             {count > 0 && (

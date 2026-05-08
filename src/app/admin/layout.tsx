@@ -15,6 +15,7 @@ import {
   LogOut
 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default async function AdminLayout({
   children,
@@ -79,9 +80,10 @@ export default async function AdminLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b-2 border-foreground bg-background flex items-center justify-between px-6 md:px-8 sticky top-0 z-40">
+          <header className="h-16 border-b-2 border-foreground bg-background flex items-center justify-between px-6 md:px-8 sticky top-0 z-40">
           <h2 className="font-heading text-lg uppercase">Sistem Manajemen</h2>
           <div className="flex items-center gap-4">
+             <ThemeToggle />
              <span className="text-xs font-bold bg-secondary text-white px-2 py-1 uppercase tracking-widest">Administrator</span>
           </div>
         </header>
