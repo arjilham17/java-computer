@@ -10,6 +10,7 @@ import {
   BarChart3
 } from "lucide-react";
 import Link from "next/link";
+import AdminDashboardStats from "@/components/admin/AdminDashboardStats";
 
 export default async function AdminDashboard() {
   const stats = await getAdminStats();
@@ -69,9 +70,19 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
+      <AdminDashboardStats 
+        bestSellingProducts={stats.bestSellingProducts}
+        revenueTrend={stats.revenueTrend}
+        totalRevenue={stats.totalRevenue}
+        productCount={stats.productCount}
+        orderCount={stats.orderCount}
+        userCount={stats.userCount}
+        recentOrders={stats.recentOrders}
+      />
+
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Recent Orders */}
-        <div className="lg:col-span-2 border-2 border-foreground">
+        <div className="lg:col-span-2 border-2 border-foreground bg-card">
           <div className="p-6 border-b-2 border-foreground flex justify-between items-center">
             <h3 className="font-heading text-lg uppercase">Pesanan Terbaru</h3>
             <Link href="/admin/orders" className="text-xs font-bold uppercase tracking-widest hover:text-secondary flex items-center gap-1">
@@ -135,11 +146,11 @@ export default async function AdminDashboard() {
               <Layers className="w-4 h-4" />
             </Link>
             <Link 
-              href="/admin/reports" 
+              href="/admin/orders" 
               className="flex items-center justify-between w-full p-4 border-2 border-background text-xs font-bold uppercase tracking-widest hover:bg-background hover:text-foreground transition-colors"
             >
-              Cetak Laporan Penjualan
-              <BarChart3 className="w-4 h-4" />
+              Kelola Pesanan
+              <ShoppingCart className="w-4 h-4" />
             </Link>
           </div>
         </div>

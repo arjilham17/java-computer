@@ -16,7 +16,7 @@ export default function Footer() {
         <div>
           <p className="text-xs font-bold uppercase tracking-widest mb-4 text-secondary">Navigasi</p>
           <ul className="space-y-2 text-sm">
-            {["Produk", "Kategori", "Blog", "Tentang Kami"].map((item) => (
+            {["Produk", "Blog", "Tentang Kami"].map((item) => (
               <li key={item}>
                 <Link href={`/${item.toLowerCase().replace(" ", "-")}`} className="text-background/70 hover:text-secondary transition-colors">
                   {item}

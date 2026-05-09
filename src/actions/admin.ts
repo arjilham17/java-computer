@@ -8,7 +8,9 @@ export async function getAdminStats() {
     orderCount,
     userCount,
     revenue,
-    recentOrders
+    recentOrders,
+    bestSelling,
+    revenueByDay
   ] = await Promise.all([
     db.product.count(),
     db.order.count(),
@@ -21,15 +23,49 @@ export async function getAdminStats() {
       orderBy: { created_at: "desc" },
       take: 5,
       include: { user: { select: { full_name: true } } }
+    }),
+    db.orderItem.groupBy({
+      by: ['product_id'],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 5,
+    }),
+    db.order.findMany({
+      where: { payment_status: "PAID" },
+      select: { created_at: true, total_price: true },
+      orderBy: { created_at: "asc" },
+      take: 30 // Last 30 paid orders for trend
     })
   ]);
+
+  // Fetch product names for best selling
+  const bestSellingProducts = await Promise.all(
+    bestSelling.map(async (item) => {
+      const product = await db.product.findUnique({
+        where: { id: item.product_id },
+        select: { name: true }
+      });
+      return {
+        name: product?.name || "Unknown",
+        sales: item._sum.quantity || 0
+      };
+    })
+  );
+
+  // Process revenue trend (simplified for now)
+  const revenueTrend = revenueByDay.map(order => ({
+    date: order.created_at.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+    amount: Number(order.total_price)
+  }));
 
   return {
     productCount,
     orderCount,
     userCount,
     totalRevenue: Number(revenue._sum.total_price || 0),
-    recentOrders: recentOrders.map(o => ({ ...o, total_price: Number(o.total_price) }))
+    recentOrders: recentOrders.map(o => ({ ...o, total_price: Number(o.total_price) })),
+    bestSellingProducts,
+    revenueTrend
   };
 }
 

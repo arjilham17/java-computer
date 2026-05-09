@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo_Black, Work_Sans, Space_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -31,15 +32,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html
-        lang="id"
-        className={`${archivoBlack.variable} ${workSans.variable} ${spaceMono.variable} h-full antialiased`}
+    <html
+      lang="id"
+      className={`${archivoBlack.variable} ${workSans.variable} ${spaceMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body 
+        className="min-h-full flex flex-col font-sans bg-background text-foreground"
+        suppressHydrationWarning
       >
-        <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider>
+            {children}
+          </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

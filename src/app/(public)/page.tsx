@@ -1,3 +1,5 @@
+import { Boxes } from "@/components/ui/background-boxes";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { getFeaturedProducts, getCategories } from "@/actions/products";
 import ProductCard from "@/components/ProductCard";
@@ -10,33 +12,33 @@ export default async function HomePage() {
   const products = featuredResult.products;
 
   return (
-    <div>
+    <div className="bg-background text-foreground">
       {/* Hero */}
-      <section className="border-b-2 border-foreground bg-foreground text-background">
-        <div className="max-w-7xl mx-auto px-4 py-20 md:py-32 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-4">
-              Toko Komputer Terpercaya
-            </p>
-            <h1 className="font-heading text-5xl md:text-7xl leading-none uppercase mb-6">
-              Upgrade Your Setup.
-            </h1>
-            <p className="text-background/70 text-lg mb-8 max-w-md leading-relaxed">
-              Laptop, PC, sparepart, monitor, dan aksesoris komputer terbaik. Harga kompetitif, garansi resmi.
-            </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link href="/products" className="px-6 py-3 bg-secondary text-white text-sm font-bold uppercase tracking-widest hover:bg-red-700 transition-colors border-2 border-secondary">
-                Lihat Produk
-              </Link>
-              <Link href="/categories" className="px-6 py-3 text-background text-sm font-bold uppercase tracking-widest hover:bg-background hover:text-foreground transition-colors border-2 border-background">
-                Kategori
-              </Link>
-            </div>
-          </div>
+      <section className="h-[80vh] relative w-full overflow-hidden bg-foreground flex flex-col items-center justify-center">
+        <div className="absolute inset-0 w-full h-full bg-foreground z-20 [mask-image:radial-gradient(transparent,black)] pointer-events-none" />
 
-          {/* Hero right — placeholder visual */}
-          <div className="hidden md:flex h-64 border-2 border-background/20 items-center justify-center text-background/30 font-heading text-xl uppercase">
-            Hero Visual
+        <Boxes />
+        
+        <div className="relative z-30 text-center px-4 max-w-5xl">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-secondary mb-6">
+            Java Computer — Est. 2024
+          </p>
+          <h1 className="font-heading text-5xl md:text-8xl text-background mb-8 uppercase leading-[1.05] tracking-[-0.03em]">
+            Upgrade Your <br /> 
+            <span className="text-secondary italic">Digital Setup</span>
+          </h1>
+          <p className="text-center mt-2 text-background/70 max-w-xl mx-auto mb-12 text-lg font-medium leading-relaxed">
+            Laptop, PC, sparepart, monitor, dan aksesoris komputer terbaik. 
+            Harga kompetitif, garansi resmi.
+          </p>
+          
+          <div className="flex gap-4 flex-wrap justify-center">
+            <Link href="/products" className="px-10 py-4 bg-background text-foreground text-sm font-bold uppercase tracking-[0.06em] hover:bg-secondary hover:text-white transition-all border-2 border-background">
+              Lihat Produk
+            </Link>
+            <Link href="/about" className="px-10 py-4 text-background text-sm font-bold uppercase tracking-[0.06em] hover:bg-background hover:text-foreground transition-all border-2 border-background/30">
+              Tentang Kami
+            </Link>
           </div>
         </div>
       </section>
@@ -51,7 +53,7 @@ export default async function HomePage() {
                 <Link
                   key={cat.id}
                   href={`/products?category=${cat.slug}`}
-                  className="px-4 py-2 border-2 border-border text-xs font-bold uppercase tracking-widest hover:border-foreground hover:bg-muted transition-colors"
+                  className="px-4 py-2 border-2 border-border text-xs font-bold uppercase tracking-widest hover:border-foreground hover:bg-muted transition-colors text-foreground"
                 >
                   {cat.name}
                 </Link>
