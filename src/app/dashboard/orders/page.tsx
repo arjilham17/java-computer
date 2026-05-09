@@ -8,6 +8,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function UserOrdersPage() {
   const orders = await getUserOrders();
@@ -60,8 +61,19 @@ export default async function UserOrdersPage() {
               <div className="p-4 md:p-6 space-y-4">
                 {order.items.map((item, idx) => (
                   <div key={idx} className="flex gap-4 items-center">
-                    <div className="w-12 h-12 bg-muted border border-border shrink-0 flex items-center justify-center text-[8px] font-bold uppercase">
-                      Foto
+                    <div className="w-12 h-12 bg-muted border border-border shrink-0 relative overflow-hidden">
+                      {item.product.image ? (
+                        <Image 
+                          src={item.product.image} 
+                          alt={item.product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-[8px] font-bold uppercase opacity-20">
+                          No Pic
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <Link 

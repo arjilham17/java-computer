@@ -32,23 +32,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html
-        lang="id"
-        className={`${archivoBlack.variable} ${workSans.variable} ${spaceMono.variable} h-full antialiased`}
+    <html
+      lang="id"
+      className={`${archivoBlack.variable} ${workSans.variable} ${spaceMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body 
+        className="min-h-full flex flex-col font-sans bg-background text-foreground"
         suppressHydrationWarning
       >
-        <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider>
             {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
