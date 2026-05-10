@@ -3,15 +3,20 @@
 import Link from "next/link";
 import { useCartStore } from "@/store/cart";
 import { ShoppingCart, Menu, X, Laptop, Mouse, Monitor } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/ui/curtain-theme-toggle";
 import { Navbar1 } from "@/components/ui/shadcnblocks-com-navbar1";
 
 export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
   const { totalItems } = useCartStore();
   const { isSignedIn, user } = useUser();
-  const count = totalItems();
+  const count = mounted ? totalItems() : 0;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const menuData = [
     { title: "Beranda", url: "/" },
